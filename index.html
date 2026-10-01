@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BM cosmetics 🎀</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-pink: #ffb6c1;
+            --deep-pink: #d81b60;
+            --gold: #c5a059;
+            --light-gold: #f4e8c1;
+            --dark-bg: #fff5f8;
+            --text-color: #333333;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(197, 160, 89, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
+
+        #loading-screen img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--gold);
+            margin-bottom: 20px;
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+
+        #loading-screen h1 {
+            color: var(--deep-pink);
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .loader-bar {
+            width: 220px;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, var(--gold), var(--deep-pink));
+            animation: loading 1.5s infinite ease-in-out;
+        }
+
+        @keyframes loading {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+            100% { transform: scale(1); }
+        }
+
+        /* Navbar */
+        navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 40px;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .nav-brand img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            object-fit: cover;
+        }
+
+        .nav-brand span {
+            font-weight: 900;
+            font-size: 22px;
+            color: var(--deep-pink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .cart-icon-btn {
+            background: linear-gradient(135deg, var(--gold), #b89742);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            color: var(--white);
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .cart-icon-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 0 20px;
+        }
+
+        .section-title-box {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: var(--deep-pink);
+            font-size: 34px;
+            font-weight: 900;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        /* Categories Grid (Reference style) */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .category-card {
+            height: 280px;
+            border-radius: 50% 50% 20px 20px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 25px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border: 4px solid var(--gold);
+            overflow: hidden;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(197, 160, 89, 0.4);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.1));
+        }
+
+        .category-card h3 {
+            position: relative;
+            color: var(--white);
+            font-size: 24px;
+            font-weight: 800;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+            letter-spacing: 0.5px;
+        }
+
+        /* Views management */
+        .page-view {
+            display: none;
+        }
+
+        .page-view.active {
+            display: block;
+        }
+
+        .back-btn {
+            background: var(--deep-pink);
+            color: var(--white);
+            border: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(216, 27, 96, 0.2);
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #b0144c;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img-placeholder {
+            width: 100%;
+            height: 160px;
+            background: #fff0f5;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--deep-pink);
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border: 2px dashed var(--primary-pink);
+        }
+
+        .product-card h4 {
+            font-size: 18px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .product-card .price {
+            color: var(--gold);
+            font-weight: 800;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart-btn {
+            background: var(--gold);
+            color: var(--white);
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #b08f4c;
+        }
+
+        .view-cart-mini-btn {
+            background: var(--deep-pink);
+            color: var(--white);
+            border: none;
+            padding: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 8px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cart View Layout */
+        .cart-container {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            max-width: 650px;
+            margin: 0 auto;
+            border: 1px solid var(--light-gold);
+        }
+
+        .cart-items-list {
+            list-style: none;
+            margin-bottom: 25px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .cart-items-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #f2f2f2;
+            font-weight: 700;
+        }
+
+        .checkout-btn {
+            background: var(--deep-pink);
+            color: var(--white);
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.3);
+            transition: background 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #b0144c;
+        }
+
+        /* Checkout Form View */
+        .checkout-form-container {
+            background: var(--white);
+            padding: 35px;
+            border-radius: 25px;
+            max-width: 550px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-gold);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 12px;
+            outline: none;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--gold);
+        }
+
+        .submit-order-btn {
+            background: linear-gradient(135deg, var(--gold), #b89742);
+            color: var(--white);
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+        }
+
+        /* Footer & Contact Section */
+        footer {
+            background: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 70px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.04);
+            border-top: 2px solid var(--light-gold);
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 26px;
+            text-decoration: none;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .social-btn.whatsapp {
+            background: #25d366;
+        }
+
+        .social-btn.instagram {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #df497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        }
+
+        .social-btn:hover {
+            transform: scale(1.12);
+        }
+
+        .copyright {
+            margin-top: 25px;
+            font-size: 15px;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <img src="https://i.postimg.cc/Vvv9H1mc/IMG-1048.png" alt="BM cosmetics Logo">
+        <h1>BM cosmetics 🎀</h1>
+        <div class="loader-bar"></div>
+    </div>
+
+    <!-- Navbar -->
+    <navbar>
+        <div class="nav-brand" onclick="goHomeTop()">
+            <img src="https://i.postimg.cc/Vvv9H1mc/IMG-1048.png" alt="Logo">
+            <span>BM cosmetics 🎀</span>
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="goHomeTop()">الرئيسية</a></li>
+            <li><a onclick="goProductsSection()">المنتجات</a></li>
+            <li><a onclick="scrollToContact()">التواصل</a></li>
+        </ul>
+        <button class="cart-icon-btn" onclick="showCartView()">
+            <i class="fa-solid fa-cart-shopping"></i> (<span id="cart-count">0</span>)
+        </button>
+    </navbar>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Home / Categories Section -->
+        <div id="home-section" class="page-view active">
+            <div class="section-title-box">
+                <h2 class="section-title" id="products-anchor">أقسام المنتجات الفاخرة</h2>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card" style="background-image: url('https://i.postimg.cc/W49wmhc9/IMG-1049.jpg');" onclick="openCategory('Skin Care')">
+                    <h3>Skin Care</h3>
+                </div>
+                <div class="category-card" style="background-image: url('https://i.postimg.cc/m2xNyvJd/IMG-1050.jpg');" onclick="openCategory('Hair Care')">
+                    <h3>Hair Care</h3>
+                </div>
+                <div class="category-card" style="background-image: url('https://i.postimg.cc/15p0CWZ6/IMG-1051.jpg');" onclick="openCategory('Body Care')">
+                    <h3>Body Care</h3>
+                </div>
+                <div class="category-card" style="background-image: url('https://i.postimg.cc/SKtc23cC/IMG-1052.jpg');" onclick="openCategory('Kids')">
+                    <h3>Kids</h3>
+                </div>
+                <div class="category-card" style="background-image: url('https://i.postimg.cc/Bvw2Lk2k/IMG-1053.jpg');" onclick="openCategory('Korean')">
+                    <h3>Korean</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Category Page View -->
+        <div id="products-section" class="page-view">
+            <button class="back-btn" onclick="goHomeTop()"><i class="fa-solid fa-arrow-right"></i> رجوع للأقسام الرئيسية</button>
+            <div class="section-title-box">
+                <h2 class="section-title" id="category-title">المنتجات</h2>
+            </div>
+            <div class="products-grid" id="products-grid">
+                <!-- 5 Empty Product Slots Generated via JS -->
+            </div>
+        </div>
+
+        <!-- Cart View -->
+        <div id="cart-section" class="page-view">
+            <button class="back-btn" onclick="goHomeTop()"><i class="fa-solid fa-arrow-right"></i> متابعة التسوق</button>
+            <div class="cart-container">
+                <h2 style="margin-bottom: 20px; color: var(--deep-pink); text-align: center; font-weight: 900;">سلة المشتريات</h2>
+                <ul class="cart-items-list" id="cart-items-list">
+                    <!-- Cart items -->
+                </ul>
+                <button class="checkout-btn" onclick="proceedToCheckout()">إتمام الطلب (Process Checkout)</button>
+            </div>
+        </div>
+
+        <!-- Checkout Form View -->
+        <div id="checkout-section" class="page-view">
+            <button class="back-btn" onclick="showCartView()"><i class="fa-solid fa-arrow-right"></i> رجوع للسلة</button>
+            <div class="checkout-form-container">
+                <h2 style="margin-bottom: 25px; color: var(--deep-pink); text-align: center; font-weight: 900;">بيانات الشحن والدفع</h2>
+                <div class="form-group">
+                    <label>الاسم:</label>
+                    <input type="text" id="cust-name" placeholder="أدخل اسمك الكريم">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف:</label>
+                    <input type="tel" id="cust-phone" placeholder="أدخل رقم هاتفك">
+                </div>
+                <div class="form-group">
+                    <label>العنوان:</label>
+                    <input type="text" id="cust-address" placeholder="أدخل العنوان بالتفصيل">
+                </div>
+                <div class="form-group">
+                    <label>طريقة الدفع:</label>
+                    <select id="payment-method">
+                        <option value="فودافون كاش">فودافون كاش</option>
+                        <option value="الدفع عند الاستلام">الدفع عند الاستلام</option>
+                    </select>
+                </div>
+                <button class="submit-order-btn" onclick="submitOrder()">إرسال الطلب عبر الواتساب</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer & Contact Section -->
+    <footer id="contact-section">
+        <h3 style="color: var(--deep-pink); margin-bottom: 10px; font-size: 22px; font-weight: 900;">تواصل معنا</h3>
+        <p style="font-weight: 700; color: #666;">نسعد بخدمتكم دائماً في BM cosmetics 🎀</p>
+        <div class="social-buttons">
+            <a href="https://wa.me/201099872665" target="_blank" class="social-btn whatsapp">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a href="https://www.instagram.com/bm_cosmetics_0?stkn=aDh3NTlxeDV0OTNw" target="_blank" class="social-btn instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+        </div>
+        <div class="copyright">
+            Copyright © AKR. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Hide Loading Screen smoothly after 1.4 seconds
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 600);
+            }, 1400);
+        });
+
+        let cart = [];
+
+        function hideAllViews() {
+            document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+        }
+
+        function goHomeTop() {
+            hideAllViews();
+            document.getElementById('home-section').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goProductsSection() {
+            hideAllViews();
+            document.getElementById('home-section').classList.add('active');
+            document.getElementById('products-anchor').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToContact() {
+            hideAllViews();
+            document.getElementById('home-section').classList.add('active');
+            document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openCategory(categoryName) {
+            hideAllViews();
+            document.getElementById('products-section').classList.add('active');
+            document.getElementById('category-title').innerText = categoryName;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            let grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            
+            // Generating 5 professional product slots as requested
+            for (let i = 1; i <= 5; i++) {
+                let pName = `${categoryName} Product ${i}`;
+                let pPrice = `${(i * 60) + 120} EGP`;
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-img-placeholder">منتج ${i} مميز</div>
+                        <h4>${pName}</h4>
+                        <div class="price">${pPrice}</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('${pName}', '${pPrice}', this)">Add to Cart</button>
+                        <button class="view-cart-mini-btn" onclick="showCartView()">View Cart</button>
+                    </div>
+                `;
+            }
+        }
+
+        function addToCart(name, price, btnElement) {
+            cart.push({ name, price });
+            document.getElementById('cart-count').innerText = cart.length;
+            let viewBtn = btnElement.nextElementSibling;
+            if(viewBtn) viewBtn.style.display = 'block';
+        }
+
+        function showCartView() {
+            hideAllViews();
+            document.getElementById('cart-section').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            let list = document.getElementById('cart-items-list');
+            list.innerHTML = '';
+            if (cart.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#888; font-weight:700; padding: 20px;">السلة فارغة حالياً</p>';
+                return;
+            }
+            cart.forEach((item) => {
+                list.innerHTML += `
+                    <li>
+                        <span>${item.name}</span>
+                        <span style="color: var(--gold); font-weight:900;">${item.price}</span>
+                    </li>
+                `;
+            });
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                alert('سلتك فارغة!');
+                return;
+            }
+            hideAllViews();
+            document.getElementById('checkout-section').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function submitOrder() {
+            let name = document.getElementById('cust-name').value;
+            let phone = document.getElementById('cust-phone').value;
+            let address = document.getElementById('cust-address').value;
+            let payment = document.getElementById('payment-method').value;
+
+            if(!name || !phone || !address) {
+                alert('من فضلك املأ جميع البيانات المطلوبة للشحن');
+                return;
+            }
+
+            let orderDetails = cart.map(item => `- ${item.name} (${item.price})`).join('%0a');
+            let message = `مرحباً، اريد طلب المنتجات الآتية:%0a${orderDetails}%0a%0aالاسم: ${name}%0aالهاتف: ${phone}%0aالعنوان: ${address}%0aطريقة الدفع: ${payment}`;
+            
+            let whatsappUrl = `https://wa.me/201099872665?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
